@@ -1,0 +1,2218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K-POPクイズ 200問版</title>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8398161859137802"
+crossorigin="anonymous"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+padding:20px;
+background:#0f172a;
+font-family:Arial,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+color:white;
+text-align:center;
+}
+.container{
+max-width:850px;
+margin:auto;
+background:#1e293b;
+padding:25px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+h1{color:#facc15;margin-top:0}
+.lead{color:#d1d5db;line-height:1.7}
+.question{font-size:24px;margin:25px 0;font-weight:bold;line-height:1.6}
+.choice-btn{
+display:block;
+width:100%;
+margin:10px 0;
+padding:14px;
+border:none;
+border-radius:12px;
+background:#2563eb;
+color:white;
+font-size:17px;
+cursor:pointer;
+transition:.2s;
+}
+.choice-btn:hover{background:#1d4ed8;transform:translateY(-1px)}
+.choice-btn:disabled{cursor:not-allowed;opacity:.95}
+.correct{background:#16a34a !important}
+.wrong{background:#dc2626 !important}
+.hidden{display:none}
+.start-btn{
+padding:14px 28px;
+border:none;
+border-radius:12px;
+background:#facc15;
+color:#111827;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+}
+.progress{margin-bottom:15px;color:#d1d5db}
+.status{margin-top:15px;font-size:20px;font-weight:bold;min-height:30px}
+.ad-area{
+margin:20px 0;
+background:#334155;
+border-radius:12px;
+padding:10px;
+min-height:90px;
+}
+@media(max-width:600px){
+body{padding:10px}
+.container{padding:18px}
+.question{font-size:20px}
+.choice-btn{font-size:16px}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>K-POPクイズ 200問版</h1>
+
+<div class="ad-area">
+<ins class="adsbygoogle"
+style="display:block"
+data-ad-client="ca-pub-8398161859137802"
+data-ad-slot="5599163841"
+data-ad-format="auto"
+data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+
+<div id="startScreen">
+<p class="lead">全200問から50問をランダム出題！<br>同じ問題は出ません。回答後は自動で次の問題へ進みます。</p>
+<button class="start-btn" onclick="startQuiz()">スタート</button>
+</div>
+
+<div id="quizScreen" class="hidden">
+<div class="progress" id="progress"></div>
+<div class="question" id="question"></div>
+<div id="choices"></div>
+<div class="status" id="status"></div>
+</div>
+
+<div id="resultScreen" class="hidden">
+<h2>結果発表</h2>
+<p id="resultText"></p>
+<button class="start-btn" onclick="startQuiz()">もう一度遊ぶ</button>
+</div>
+</div>
+
+<script>
+const quizData = [
+  {
+    "q": "「Dynamite」を歌っているK-POPアーティストは？",
+    "a": "BTS",
+    "c": [
+      "ENHYPEN",
+      "Kep1er",
+      "NiziU",
+      "BTS"
+    ]
+  },
+  {
+    "q": "BTS の代表曲として有名なのは？",
+    "a": "Dynamite",
+    "c": [
+      "Dynamite",
+      "Ring Ding Dong",
+      "Make you happy",
+      "Gee"
+    ]
+  },
+  {
+    "q": "BTS のファン名として知られるのは？",
+    "a": "ARMY",
+    "c": [
+      "ONCE",
+      "Kep1ian",
+      "Ahgase",
+      "ARMY"
+    ]
+  },
+  {
+    "q": "BTS は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "韓国",
+      "アメリカ",
+      "イギリス",
+      "日本"
+    ]
+  },
+  {
+    "q": "BTS はどんなグループとして知られる？",
+    "a": "7人組",
+    "c": [
+      "7人組",
+      "ボーイズグループ",
+      "4人組",
+      "5人組"
+    ]
+  },
+  {
+    "q": "「DDU-DU DDU-DU」を歌っているK-POPアーティストは？",
+    "a": "BLACKPINK",
+    "c": [
+      "BLACKPINK",
+      "TXT",
+      "MONSTA X",
+      "SHINee"
+    ]
+  },
+  {
+    "q": "BLACKPINK の代表曲として有名なのは？",
+    "a": "DDU-DU DDU-DU",
+    "c": [
+      "WA DA DA",
+      "DDU-DU DDU-DU",
+      "Candy",
+      "LOVE DIVE"
+    ]
+  },
+  {
+    "q": "BLACKPINK のファン名として知られるのは？",
+    "a": "BLINK",
+    "c": [
+      "NSWER",
+      "EXO-L",
+      "NCTzen",
+      "BLINK"
+    ]
+  },
+  {
+    "q": "BLACKPINK は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "日本",
+      "イギリス",
+      "韓国"
+    ]
+  },
+  {
+    "q": "BLACKPINK はどんなグループとして知られる？",
+    "a": "4人組",
+    "c": [
+      "ロックバンド",
+      "5人組",
+      "4人組",
+      "6人組"
+    ]
+  },
+  {
+    "q": "「TT」を歌っているK-POPアーティストは？",
+    "a": "TWICE",
+    "c": [
+      "Stray Kids",
+      "TWICE",
+      "NiziU",
+      "JO1"
+    ]
+  },
+  {
+    "q": "TWICE の代表曲として有名なのは？",
+    "a": "TT",
+    "c": [
+      "TT",
+      "HIP",
+      "WONDERLAND",
+      "WANNABE"
+    ]
+  },
+  {
+    "q": "TWICE のファン名として知られるのは？",
+    "a": "ONCE",
+    "c": [
+      "NCTzen",
+      "Kep1ian",
+      "VIP",
+      "ONCE"
+    ]
+  },
+  {
+    "q": "TWICE は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "韓国",
+      "日本",
+      "イギリス",
+      "アメリカ"
+    ]
+  },
+  {
+    "q": "TWICE はどんなグループとして知られる？",
+    "a": "9人組",
+    "c": [
+      "9人組",
+      "7人組",
+      "ボーイズグループ",
+      "8人組"
+    ]
+  },
+  {
+    "q": "「Super」を歌っているK-POPアーティストは？",
+    "a": "SEVENTEEN",
+    "c": [
+      "Kep1er",
+      "Red Velvet",
+      "SEVENTEEN",
+      "LOONA"
+    ]
+  },
+  {
+    "q": "SEVENTEEN の代表曲として有名なのは？",
+    "a": "Super",
+    "c": [
+      "God's Menu",
+      "Get A Guitar",
+      "Super",
+      "One and Only"
+    ]
+  },
+  {
+    "q": "SEVENTEEN のファン名として知られるのは？",
+    "a": "CARAT",
+    "c": [
+      "TREASURE MAKER",
+      "MONSTIEZ",
+      "CARAT",
+      "BRIIZE"
+    ]
+  },
+  {
+    "q": "SEVENTEEN は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "イギリス",
+      "韓国",
+      "日本",
+      "アメリカ"
+    ]
+  },
+  {
+    "q": "SEVENTEEN はどんなグループとして知られる？",
+    "a": "13人組",
+    "c": [
+      "7人組",
+      "13人組",
+      "ボーイズグループ",
+      "8人組"
+    ]
+  },
+  {
+    "q": "「God's Menu」を歌っているK-POPアーティストは？",
+    "a": "Stray Kids",
+    "c": [
+      "LOONA",
+      "ILLIT",
+      "JO1",
+      "Stray Kids"
+    ]
+  },
+  {
+    "q": "Stray Kids の代表曲として有名なのは？",
+    "a": "God's Menu",
+    "c": [
+      "Next Level",
+      "TOMBOY",
+      "God's Menu",
+      "DDU-DU DDU-DU"
+    ]
+  },
+  {
+    "q": "Stray Kids のファン名として知られるのは？",
+    "a": "STAY",
+    "c": [
+      "MONBEBE",
+      "MOOMOO",
+      "ATINY",
+      "STAY"
+    ]
+  },
+  {
+    "q": "Stray Kids は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "イギリス",
+      "日本",
+      "韓国"
+    ]
+  },
+  {
+    "q": "Stray Kids はどんなグループとして知られる？",
+    "a": "8人組",
+    "c": [
+      "ロックバンド",
+      "13人組",
+      "8人組",
+      "ガールズグループ"
+    ]
+  },
+  {
+    "q": "「Ditto」を歌っているK-POPアーティストは？",
+    "a": "NewJeans",
+    "c": [
+      "TWICE",
+      "Girls' Generation",
+      "ITZY",
+      "NewJeans"
+    ]
+  },
+  {
+    "q": "NewJeans の代表曲として有名なのは？",
+    "a": "Ditto",
+    "c": [
+      "Mister",
+      "Ditto",
+      "SHEESH",
+      "Super"
+    ]
+  },
+  {
+    "q": "NewJeans のファン名として知られるのは？",
+    "a": "Bunnies",
+    "c": [
+      "ZEROSE",
+      "BLACKJACK",
+      "NSWER",
+      "Bunnies"
+    ]
+  },
+  {
+    "q": "NewJeans は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "イギリス",
+      "韓国",
+      "アメリカ",
+      "日本"
+    ]
+  },
+  {
+    "q": "NewJeans はどんなグループとして知られる？",
+    "a": "5人組",
+    "c": [
+      "5人組",
+      "ボーイズグループ",
+      "13人組",
+      "8人組"
+    ]
+  },
+  {
+    "q": "「ANTIFRAGILE」を歌っているK-POPアーティストは？",
+    "a": "LE SSERAFIM",
+    "c": [
+      "TWS",
+      "MAMAMOO",
+      "Apink",
+      "LE SSERAFIM"
+    ]
+  },
+  {
+    "q": "LE SSERAFIM の代表曲として有名なのは？",
+    "a": "ANTIFRAGILE",
+    "c": [
+      "NoNoNo",
+      "O.O",
+      "SHEESH",
+      "ANTIFRAGILE"
+    ]
+  },
+  {
+    "q": "LE SSERAFIM のファン名として知られるのは？",
+    "a": "FEARNOT",
+    "c": [
+      "MIRACLE",
+      "BLACKJACK",
+      "NCTzen",
+      "FEARNOT"
+    ]
+  },
+  {
+    "q": "LE SSERAFIM は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "イギリス",
+      "アメリカ",
+      "日本",
+      "韓国"
+    ]
+  },
+  {
+    "q": "LE SSERAFIM はどんなグループとして知られる？",
+    "a": "5人組",
+    "c": [
+      "俳優グループ",
+      "8人組",
+      "13人組",
+      "5人組"
+    ]
+  },
+  {
+    "q": "「LOVE DIVE」を歌っているK-POPアーティストは？",
+    "a": "IVE",
+    "c": [
+      "IVE",
+      "BTS",
+      "BABYMONSTER",
+      "ZEROBASEONE"
+    ]
+  },
+  {
+    "q": "IVE の代表曲として有名なのは？",
+    "a": "LOVE DIVE",
+    "c": [
+      "SHEESH",
+      "DDU-DU DDU-DU",
+      "One and Only",
+      "LOVE DIVE"
+    ]
+  },
+  {
+    "q": "IVE のファン名として知られるのは？",
+    "a": "DIVE",
+    "c": [
+      "ARMY",
+      "MOA",
+      "DIVE",
+      "BLACKJACK"
+    ]
+  },
+  {
+    "q": "IVE は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "韓国",
+      "アメリカ",
+      "日本",
+      "イギリス"
+    ]
+  },
+  {
+    "q": "IVE はどんなグループとして知られる？",
+    "a": "6人組",
+    "c": [
+      "ソロ歌手",
+      "8人組",
+      "6人組",
+      "4人組"
+    ]
+  },
+  {
+    "q": "「Next Level」を歌っているK-POPアーティストは？",
+    "a": "aespa",
+    "c": [
+      "SHINee",
+      "Apink",
+      "GOT7",
+      "aespa"
+    ]
+  },
+  {
+    "q": "aespa の代表曲として有名なのは？",
+    "a": "Next Level",
+    "c": [
+      "Shoot Out",
+      "Next Level",
+      "DDU-DU DDU-DU",
+      "O.O"
+    ]
+  },
+  {
+    "q": "aespa のファン名として知られるのは？",
+    "a": "MY",
+    "c": [
+      "WithU",
+      "SHINee WORLD",
+      "KAMILIA",
+      "MY"
+    ]
+  },
+  {
+    "q": "aespa は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "イギリス",
+      "アメリカ",
+      "韓国",
+      "日本"
+    ]
+  },
+  {
+    "q": "aespa はどんなグループとして知られる？",
+    "a": "4人組",
+    "c": [
+      "ロックバンド",
+      "ボーイズグループ",
+      "ソロ歌手",
+      "4人組"
+    ]
+  },
+  {
+    "q": "「WANNABE」を歌っているK-POPアーティストは？",
+    "a": "ITZY",
+    "c": [
+      "ITZY",
+      "JO1",
+      "NCT DREAM",
+      "ENHYPEN"
+    ]
+  },
+  {
+    "q": "ITZY の代表曲として有名なのは？",
+    "a": "WANNABE",
+    "c": [
+      "Get A Guitar",
+      "plot twist",
+      "Shoot Out",
+      "WANNABE"
+    ]
+  },
+  {
+    "q": "ITZY のファン名として知られるのは？",
+    "a": "MIDZY",
+    "c": [
+      "MIDZY",
+      "SHINee WORLD",
+      "BLINK",
+      "Kep1ian"
+    ]
+  },
+  {
+    "q": "ITZY は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "日本",
+      "アメリカ",
+      "韓国",
+      "イギリス"
+    ]
+  },
+  {
+    "q": "ITZY はどんなグループとして知られる？",
+    "a": "5人組",
+    "c": [
+      "俳優グループ",
+      "5人組",
+      "7人組",
+      "ガールズグループ"
+    ]
+  },
+  {
+    "q": "「Kick It」を歌っているK-POPアーティストは？",
+    "a": "NCT 127",
+    "c": [
+      "OH MY GIRL",
+      "BABYMONSTER",
+      "NCT 127",
+      "KARA"
+    ]
+  },
+  {
+    "q": "NCT 127 の代表曲として有名なのは？",
+    "a": "Kick It",
+    "c": [
+      "HIP",
+      "Kick It",
+      "Magnetic",
+      "Growl"
+    ]
+  },
+  {
+    "q": "NCT 127 のファン名として知られるのは？",
+    "a": "NCTzen",
+    "c": [
+      "ONCE",
+      "NCTzen",
+      "CARAT",
+      "PANDA"
+    ]
+  },
+  {
+    "q": "NCT 127 は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "韓国",
+      "イギリス",
+      "日本"
+    ]
+  },
+  {
+    "q": "NCT 127 はどんなグループとして知られる？",
+    "a": "ボーイズグループ",
+    "c": [
+      "8人組",
+      "ボーイズグループ",
+      "4人組",
+      "9人組"
+    ]
+  },
+  {
+    "q": "「Candy」を歌っているK-POPアーティストは？",
+    "a": "NCT DREAM",
+    "c": [
+      "LOONA",
+      "NewJeans",
+      "Red Velvet",
+      "NCT DREAM"
+    ]
+  },
+  {
+    "q": "NCT DREAM の代表曲として有名なのは？",
+    "a": "Candy",
+    "c": [
+      "Next Level",
+      "Ring Ding Dong",
+      "無限大",
+      "Candy"
+    ]
+  },
+  {
+    "q": "NCT DREAM のファン名として知られるのは？",
+    "a": "NCTzen",
+    "c": [
+      "NCTzen",
+      "PANDA",
+      "42",
+      "BLACKJACK"
+    ]
+  },
+  {
+    "q": "NCT DREAM は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "韓国",
+      "日本",
+      "アメリカ",
+      "イギリス"
+    ]
+  },
+  {
+    "q": "NCT DREAM はどんなグループとして知られる？",
+    "a": "ボーイズグループ",
+    "c": [
+      "13人組",
+      "ガールズグループ",
+      "ボーイズグループ",
+      "4人組"
+    ]
+  },
+  {
+    "q": "「Growl」を歌っているK-POPアーティストは？",
+    "a": "EXO",
+    "c": [
+      "NMIXX",
+      "ENHYPEN",
+      "NCT 127",
+      "EXO"
+    ]
+  },
+  {
+    "q": "EXO の代表曲として有名なのは？",
+    "a": "Growl",
+    "c": [
+      "Growl",
+      "DDU-DU DDU-DU",
+      "Get A Guitar",
+      "TOMBOY"
+    ]
+  },
+  {
+    "q": "EXO のファン名として知られるのは？",
+    "a": "EXO-L",
+    "c": [
+      "JAM",
+      "ENGENE",
+      "EXO-L",
+      "NSWER"
+    ]
+  },
+  {
+    "q": "EXO は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "日本",
+      "韓国",
+      "アメリカ",
+      "イギリス"
+    ]
+  },
+  {
+    "q": "EXO はどんなグループとして知られる？",
+    "a": "ボーイズグループ",
+    "c": [
+      "4人組",
+      "7人組",
+      "ボーイズグループ",
+      "ソロ歌手"
+    ]
+  },
+  {
+    "q": "「Ring Ding Dong」を歌っているK-POPアーティストは？",
+    "a": "SHINee",
+    "c": [
+      "MONSTA X",
+      "LOONA",
+      "SHINee",
+      "NMIXX"
+    ]
+  },
+  {
+    "q": "SHINee の代表曲として有名なのは？",
+    "a": "Ring Ding Dong",
+    "c": [
+      "Blue Hour",
+      "Drunk-Dazed",
+      "Dynamite",
+      "Ring Ding Dong"
+    ]
+  },
+  {
+    "q": "SHINee のファン名として知られるのは？",
+    "a": "SHINee WORLD",
+    "c": [
+      "Ahgase",
+      "Bunnies",
+      "SHINee WORLD",
+      "Orbit"
+    ]
+  },
+  {
+    "q": "SHINee は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "日本",
+      "イギリス",
+      "韓国"
+    ]
+  },
+  {
+    "q": "SHINee はどんなグループとして知られる？",
+    "a": "ボーイズグループ",
+    "c": [
+      "ボーイズグループ",
+      "俳優グループ",
+      "7人組",
+      "9人組"
+    ]
+  },
+  {
+    "q": "「FANTASTIC BABY」を歌っているK-POPアーティストは？",
+    "a": "BIGBANG",
+    "c": [
+      "(G)I-DLE",
+      "BABYMONSTER",
+      "BIGBANG",
+      "ILLIT"
+    ]
+  },
+  {
+    "q": "BIGBANG の代表曲として有名なのは？",
+    "a": "FANTASTIC BABY",
+    "c": [
+      "FANTASTIC BABY",
+      "Candy",
+      "HIP",
+      "Dynamite"
+    ]
+  },
+  {
+    "q": "BIGBANG のファン名として知られるのは？",
+    "a": "VIP",
+    "c": [
+      "ONEDOOR",
+      "VIP",
+      "MIDZY",
+      "BLINK"
+    ]
+  },
+  {
+    "q": "BIGBANG は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "韓国",
+      "日本",
+      "イギリス",
+      "アメリカ"
+    ]
+  },
+  {
+    "q": "BIGBANG はどんなグループとして知られる？",
+    "a": "ボーイズグループ",
+    "c": [
+      "ボーイズグループ",
+      "9人組",
+      "ソロ歌手",
+      "5人組"
+    ]
+  },
+  {
+    "q": "「Gee」を歌っているK-POPアーティストは？",
+    "a": "Girls' Generation",
+    "c": [
+      "Girls' Generation",
+      "KARA",
+      "RIIZE",
+      "BLACKPINK"
+    ]
+  },
+  {
+    "q": "Girls' Generation の代表曲として有名なのは？",
+    "a": "Gee",
+    "c": [
+      "Gee",
+      "I AM THE BEST",
+      "Make you happy",
+      "JIKJIN"
+    ]
+  },
+  {
+    "q": "Girls' Generation のファン名として知られるのは？",
+    "a": "SONE",
+    "c": [
+      "VIP",
+      "Bunnies",
+      "MOA",
+      "SONE"
+    ]
+  },
+  {
+    "q": "Girls' Generation は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "イギリス",
+      "韓国",
+      "日本"
+    ]
+  },
+  {
+    "q": "Girls' Generation はどんなグループとして知られる？",
+    "a": "ガールズグループ",
+    "c": [
+      "4人組",
+      "ソロ歌手",
+      "ガールズグループ",
+      "8人組"
+    ]
+  },
+  {
+    "q": "「Red Flavor」を歌っているK-POPアーティストは？",
+    "a": "Red Velvet",
+    "c": [
+      "Kep1er",
+      "Red Velvet",
+      "SHINee",
+      "RIIZE"
+    ]
+  },
+  {
+    "q": "Red Velvet の代表曲として有名なのは？",
+    "a": "Red Flavor",
+    "c": [
+      "Red Flavor",
+      "WONDERLAND",
+      "TT",
+      "plot twist"
+    ]
+  },
+  {
+    "q": "Red Velvet のファン名として知られるのは？",
+    "a": "ReVeluv",
+    "c": [
+      "Kep1ian",
+      "BLACKJACK",
+      "ReVeluv",
+      "MOOMOO"
+    ]
+  },
+  {
+    "q": "Red Velvet は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "日本",
+      "イギリス",
+      "アメリカ",
+      "韓国"
+    ]
+  },
+  {
+    "q": "Red Velvet はどんなグループとして知られる？",
+    "a": "5人組",
+    "c": [
+      "4人組",
+      "5人組",
+      "ロックバンド",
+      "8人組"
+    ]
+  },
+  {
+    "q": "「HIP」を歌っているK-POPアーティストは？",
+    "a": "MAMAMOO",
+    "c": [
+      "(G)I-DLE",
+      "MAMAMOO",
+      "TWICE",
+      "Red Velvet"
+    ]
+  },
+  {
+    "q": "MAMAMOO の代表曲として有名なのは？",
+    "a": "HIP",
+    "c": [
+      "Butterfly",
+      "Ditto",
+      "HIP",
+      "Blue Hour"
+    ]
+  },
+  {
+    "q": "MAMAMOO のファン名として知られるのは？",
+    "a": "MOOMOO",
+    "c": [
+      "BRIIZE",
+      "ARMY",
+      "MOOMOO",
+      "ONEDOOR"
+    ]
+  },
+  {
+    "q": "MAMAMOO は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "日本",
+      "イギリス",
+      "韓国"
+    ]
+  },
+  {
+    "q": "MAMAMOO はどんなグループとして知られる？",
+    "a": "4人組",
+    "c": [
+      "4人組",
+      "ロックバンド",
+      "9人組",
+      "俳優グループ"
+    ]
+  },
+  {
+    "q": "「TOMBOY」を歌っているK-POPアーティストは？",
+    "a": "(G)I-DLE",
+    "c": [
+      "Girls' Generation",
+      "KARA",
+      "Red Velvet",
+      "(G)I-DLE"
+    ]
+  },
+  {
+    "q": "(G)I-DLE の代表曲として有名なのは？",
+    "a": "TOMBOY",
+    "c": [
+      "Drunk-Dazed",
+      "JIKJIN",
+      "Kick It",
+      "TOMBOY"
+    ]
+  },
+  {
+    "q": "(G)I-DLE のファン名として知られるのは？",
+    "a": "Neverland",
+    "c": [
+      "Neverland",
+      "MIDZY",
+      "42",
+      "BLACKJACK"
+    ]
+  },
+  {
+    "q": "(G)I-DLE は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "韓国",
+      "日本",
+      "イギリス"
+    ]
+  },
+  {
+    "q": "(G)I-DLE はどんなグループとして知られる？",
+    "a": "ガールズグループ",
+    "c": [
+      "7人組",
+      "5人組",
+      "ガールズグループ",
+      "ボーイズグループ"
+    ]
+  },
+  {
+    "q": "「Drunk-Dazed」を歌っているK-POPアーティストは？",
+    "a": "ENHYPEN",
+    "c": [
+      "Kep1er",
+      "ENHYPEN",
+      "NMIXX",
+      "ZEROBASEONE"
+    ]
+  },
+  {
+    "q": "ENHYPEN の代表曲として有名なのは？",
+    "a": "Drunk-Dazed",
+    "c": [
+      "Drunk-Dazed",
+      "Magnetic",
+      "Make you happy",
+      "Candy"
+    ]
+  },
+  {
+    "q": "ENHYPEN のファン名として知られるのは？",
+    "a": "ENGENE",
+    "c": [
+      "ONCE",
+      "SONE",
+      "ENGENE",
+      "ReVeluv"
+    ]
+  },
+  {
+    "q": "ENHYPEN は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "イギリス",
+      "アメリカ",
+      "日本",
+      "韓国"
+    ]
+  },
+  {
+    "q": "ENHYPEN はどんなグループとして知られる？",
+    "a": "ボーイズグループ",
+    "c": [
+      "ロックバンド",
+      "5人組",
+      "6人組",
+      "ボーイズグループ"
+    ]
+  },
+  {
+    "q": "「Blue Hour」を歌っているK-POPアーティストは？",
+    "a": "TXT",
+    "c": [
+      "(G)I-DLE",
+      "TXT",
+      "EXO",
+      "BOYNEXTDOOR"
+    ]
+  },
+  {
+    "q": "TXT の代表曲として有名なのは？",
+    "a": "Blue Hour",
+    "c": [
+      "Growl",
+      "Shoot Out",
+      "Dynamite",
+      "Blue Hour"
+    ]
+  },
+  {
+    "q": "TXT のファン名として知られるのは？",
+    "a": "MOA",
+    "c": [
+      "SHINee WORLD",
+      "MONBEBE",
+      "MOA",
+      "MIRACLE"
+    ]
+  },
+  {
+    "q": "TXT は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "イギリス",
+      "韓国",
+      "日本",
+      "アメリカ"
+    ]
+  },
+  {
+    "q": "TXT はどんなグループとして知られる？",
+    "a": "5人組",
+    "c": [
+      "俳優グループ",
+      "5人組",
+      "4人組",
+      "6人組"
+    ]
+  },
+  {
+    "q": "「WONDERLAND」を歌っているK-POPアーティストは？",
+    "a": "ATEEZ",
+    "c": [
+      "BLACKPINK",
+      "LE SSERAFIM",
+      "SHINee",
+      "ATEEZ"
+    ]
+  },
+  {
+    "q": "ATEEZ の代表曲として有名なのは？",
+    "a": "WONDERLAND",
+    "c": [
+      "Ring Ding Dong",
+      "Super",
+      "WONDERLAND",
+      "Candy"
+    ]
+  },
+  {
+    "q": "ATEEZ のファン名として知られるのは？",
+    "a": "ATINY",
+    "c": [
+      "ATINY",
+      "JAM",
+      "ONEDOOR",
+      "SONE"
+    ]
+  },
+  {
+    "q": "ATEEZ は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "日本",
+      "イギリス",
+      "韓国"
+    ]
+  },
+  {
+    "q": "ATEEZ はどんなグループとして知られる？",
+    "a": "ボーイズグループ",
+    "c": [
+      "ボーイズグループ",
+      "5人組",
+      "ロックバンド",
+      "4人組"
+    ]
+  },
+  {
+    "q": "「JIKJIN」を歌っているK-POPアーティストは？",
+    "a": "TREASURE",
+    "c": [
+      "Stray Kids",
+      "TREASURE",
+      "MAMAMOO",
+      "ATEEZ"
+    ]
+  },
+  {
+    "q": "TREASURE の代表曲として有名なのは？",
+    "a": "JIKJIN",
+    "c": [
+      "WONDERLAND",
+      "DDU-DU DDU-DU",
+      "JIKJIN",
+      "FANTASTIC BABY"
+    ]
+  },
+  {
+    "q": "TREASURE のファン名として知られるのは？",
+    "a": "TREASURE MAKER",
+    "c": [
+      "Ahgase",
+      "TREASURE MAKER",
+      "CARAT",
+      "MIDZY"
+    ]
+  },
+  {
+    "q": "TREASURE は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "イギリス",
+      "韓国",
+      "日本"
+    ]
+  },
+  {
+    "q": "TREASURE はどんなグループとして知られる？",
+    "a": "ボーイズグループ",
+    "c": [
+      "8人組",
+      "ボーイズグループ",
+      "5人組",
+      "4人組"
+    ]
+  },
+  {
+    "q": "「Shoot Out」を歌っているK-POPアーティストは？",
+    "a": "MONSTA X",
+    "c": [
+      "BOYNEXTDOOR",
+      "Red Velvet",
+      "MONSTA X",
+      "TWS"
+    ]
+  },
+  {
+    "q": "MONSTA X の代表曲として有名なのは？",
+    "a": "Shoot Out",
+    "c": [
+      "Shoot Out",
+      "Kick It",
+      "O.O",
+      "DDU-DU DDU-DU"
+    ]
+  },
+  {
+    "q": "MONSTA X のファン名として知られるのは？",
+    "a": "MONBEBE",
+    "c": [
+      "BLACKJACK",
+      "MONBEBE",
+      "ATINY",
+      "ENGENE"
+    ]
+  },
+  {
+    "q": "MONSTA X は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "日本",
+      "アメリカ",
+      "韓国",
+      "イギリス"
+    ]
+  },
+  {
+    "q": "MONSTA X はどんなグループとして知られる？",
+    "a": "ボーイズグループ",
+    "c": [
+      "5人組",
+      "ボーイズグループ",
+      "4人組",
+      "6人組"
+    ]
+  },
+  {
+    "q": "「Just Right」を歌っているK-POPアーティストは？",
+    "a": "GOT7",
+    "c": [
+      "GOT7",
+      "MONSTA X",
+      "Apink",
+      "SEVENTEEN"
+    ]
+  },
+  {
+    "q": "GOT7 の代表曲として有名なのは？",
+    "a": "Just Right",
+    "c": [
+      "Just Right",
+      "WONDERLAND",
+      "Dynamite",
+      "Ditto"
+    ]
+  },
+  {
+    "q": "GOT7 のファン名として知られるのは？",
+    "a": "Ahgase",
+    "c": [
+      "STAY",
+      "Ahgase",
+      "MOA",
+      "ONCE"
+    ]
+  },
+  {
+    "q": "GOT7 は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "韓国",
+      "アメリカ",
+      "イギリス",
+      "日本"
+    ]
+  },
+  {
+    "q": "GOT7 はどんなグループとして知られる？",
+    "a": "ボーイズグループ",
+    "c": [
+      "13人組",
+      "ソロ歌手",
+      "俳優グループ",
+      "ボーイズグループ"
+    ]
+  },
+  {
+    "q": "「I AM THE BEST」を歌っているK-POPアーティストは？",
+    "a": "2NE1",
+    "c": [
+      "2NE1",
+      "BLACKPINK",
+      "LOONA",
+      "NiziU"
+    ]
+  },
+  {
+    "q": "2NE1 の代表曲として有名なのは？",
+    "a": "I AM THE BEST",
+    "c": [
+      "無限大",
+      "Shoot Out",
+      "Dolphin",
+      "I AM THE BEST"
+    ]
+  },
+  {
+    "q": "2NE1 のファン名として知られるのは？",
+    "a": "BLACKJACK",
+    "c": [
+      "ARMY",
+      "BLACKJACK",
+      "SONE",
+      "42"
+    ]
+  },
+  {
+    "q": "2NE1 は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "イギリス",
+      "日本",
+      "韓国"
+    ]
+  },
+  {
+    "q": "2NE1 はどんなグループとして知られる？",
+    "a": "ガールズグループ",
+    "c": [
+      "俳優グループ",
+      "ソロ歌手",
+      "ガールズグループ",
+      "ロックバンド"
+    ]
+  },
+  {
+    "q": "「Mister」を歌っているK-POPアーティストは？",
+    "a": "KARA",
+    "c": [
+      "JO1",
+      "Girls' Generation",
+      "ILLIT",
+      "KARA"
+    ]
+  },
+  {
+    "q": "KARA の代表曲として有名なのは？",
+    "a": "Mister",
+    "c": [
+      "Mister",
+      "plot twist",
+      "Red Flavor",
+      "NoNoNo"
+    ]
+  },
+  {
+    "q": "KARA のファン名として知られるのは？",
+    "a": "KAMILIA",
+    "c": [
+      "KAMILIA",
+      "MONBEBE",
+      "ReVeluv",
+      "ONEDOOR"
+    ]
+  },
+  {
+    "q": "KARA は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "韓国",
+      "アメリカ",
+      "日本",
+      "イギリス"
+    ]
+  },
+  {
+    "q": "KARA はどんなグループとして知られる？",
+    "a": "ガールズグループ",
+    "c": [
+      "俳優グループ",
+      "ガールズグループ",
+      "13人組",
+      "7人組"
+    ]
+  },
+  {
+    "q": "「NoNoNo」を歌っているK-POPアーティストは？",
+    "a": "Apink",
+    "c": [
+      "Apink",
+      "Kep1er",
+      "(G)I-DLE",
+      "GOT7"
+    ]
+  },
+  {
+    "q": "Apink の代表曲として有名なのは？",
+    "a": "NoNoNo",
+    "c": [
+      "DDU-DU DDU-DU",
+      "Get A Guitar",
+      "Blue Hour",
+      "NoNoNo"
+    ]
+  },
+  {
+    "q": "Apink のファン名として知られるのは？",
+    "a": "PANDA",
+    "c": [
+      "ONEDOOR",
+      "Orbit",
+      "Neverland",
+      "PANDA"
+    ]
+  },
+  {
+    "q": "Apink は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "イギリス",
+      "日本",
+      "韓国"
+    ]
+  },
+  {
+    "q": "Apink はどんなグループとして知られる？",
+    "a": "ガールズグループ",
+    "c": [
+      "7人組",
+      "8人組",
+      "6人組",
+      "ガールズグループ"
+    ]
+  },
+  {
+    "q": "「Dolphin」を歌っているK-POPアーティストは？",
+    "a": "OH MY GIRL",
+    "c": [
+      "ENHYPEN",
+      "2NE1",
+      "NewJeans",
+      "OH MY GIRL"
+    ]
+  },
+  {
+    "q": "OH MY GIRL の代表曲として有名なのは？",
+    "a": "Dolphin",
+    "c": [
+      "Get A Guitar",
+      "Dolphin",
+      "SHEESH",
+      "Mister"
+    ]
+  },
+  {
+    "q": "OH MY GIRL のファン名として知られるのは？",
+    "a": "MIRACLE",
+    "c": [
+      "ONEDOOR",
+      "MIRACLE",
+      "MY",
+      "DIVE"
+    ]
+  },
+  {
+    "q": "OH MY GIRL は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "韓国",
+      "イギリス",
+      "アメリカ",
+      "日本"
+    ]
+  },
+  {
+    "q": "OH MY GIRL はどんなグループとして知られる？",
+    "a": "ガールズグループ",
+    "c": [
+      "5人組",
+      "13人組",
+      "ガールズグループ",
+      "ボーイズグループ"
+    ]
+  },
+  {
+    "q": "「Butterfly」を歌っているK-POPアーティストは？",
+    "a": "LOONA",
+    "c": [
+      "Apink",
+      "LOONA",
+      "NCT 127",
+      "TWS"
+    ]
+  },
+  {
+    "q": "LOONA の代表曲として有名なのは？",
+    "a": "Butterfly",
+    "c": [
+      "Kick It",
+      "Next Level",
+      "Butterfly",
+      "In Bloom"
+    ]
+  },
+  {
+    "q": "LOONA のファン名として知られるのは？",
+    "a": "Orbit",
+    "c": [
+      "ZEROSE",
+      "42",
+      "Orbit",
+      "ATINY"
+    ]
+  },
+  {
+    "q": "LOONA は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "韓国",
+      "日本",
+      "イギリス"
+    ]
+  },
+  {
+    "q": "LOONA はどんなグループとして知られる？",
+    "a": "ガールズグループ",
+    "c": [
+      "ボーイズグループ",
+      "ガールズグループ",
+      "8人組",
+      "7人組"
+    ]
+  },
+  {
+    "q": "「WA DA DA」を歌っているK-POPアーティストは？",
+    "a": "Kep1er",
+    "c": [
+      "RIIZE",
+      "Red Velvet",
+      "NMIXX",
+      "Kep1er"
+    ]
+  },
+  {
+    "q": "Kep1er の代表曲として有名なのは？",
+    "a": "WA DA DA",
+    "c": [
+      "Candy",
+      "FANTASTIC BABY",
+      "TT",
+      "WA DA DA"
+    ]
+  },
+  {
+    "q": "Kep1er のファン名として知られるのは？",
+    "a": "Kep1ian",
+    "c": [
+      "VIP",
+      "Kep1ian",
+      "Neverland",
+      "ATINY"
+    ]
+  },
+  {
+    "q": "Kep1er は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "イギリス",
+      "韓国",
+      "日本"
+    ]
+  },
+  {
+    "q": "Kep1er はどんなグループとして知られる？",
+    "a": "ガールズグループ",
+    "c": [
+      "8人組",
+      "ガールズグループ",
+      "13人組",
+      "6人組"
+    ]
+  },
+  {
+    "q": "「O.O」を歌っているK-POPアーティストは？",
+    "a": "NMIXX",
+    "c": [
+      "NMIXX",
+      "Girls' Generation",
+      "Apink",
+      "2NE1"
+    ]
+  },
+  {
+    "q": "NMIXX の代表曲として有名なのは？",
+    "a": "O.O",
+    "c": [
+      "O.O",
+      "FANTASTIC BABY",
+      "NoNoNo",
+      "JIKJIN"
+    ]
+  },
+  {
+    "q": "NMIXX のファン名として知られるのは？",
+    "a": "NSWER",
+    "c": [
+      "ENGENE",
+      "NSWER",
+      "ONCE",
+      "MOOMOO"
+    ]
+  },
+  {
+    "q": "NMIXX は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "韓国",
+      "イギリス",
+      "日本"
+    ]
+  },
+  {
+    "q": "NMIXX はどんなグループとして知られる？",
+    "a": "ガールズグループ",
+    "c": [
+      "6人組",
+      "9人組",
+      "ガールズグループ",
+      "7人組"
+    ]
+  },
+  {
+    "q": "「SHEESH」を歌っているK-POPアーティストは？",
+    "a": "BABYMONSTER",
+    "c": [
+      "NCT DREAM",
+      "BTS",
+      "NMIXX",
+      "BABYMONSTER"
+    ]
+  },
+  {
+    "q": "BABYMONSTER の代表曲として有名なのは？",
+    "a": "SHEESH",
+    "c": [
+      "SHEESH",
+      "Ring Ding Dong",
+      "Drunk-Dazed",
+      "Blue Hour"
+    ]
+  },
+  {
+    "q": "BABYMONSTER のファン名として知られるのは？",
+    "a": "MONSTIEZ",
+    "c": [
+      "NSWER",
+      "MONSTIEZ",
+      "EXO-L",
+      "STAY"
+    ]
+  },
+  {
+    "q": "BABYMONSTER は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "韓国",
+      "アメリカ",
+      "イギリス",
+      "日本"
+    ]
+  },
+  {
+    "q": "BABYMONSTER はどんなグループとして知られる？",
+    "a": "ガールズグループ",
+    "c": [
+      "ロックバンド",
+      "6人組",
+      "ガールズグループ",
+      "ボーイズグループ"
+    ]
+  },
+  {
+    "q": "「Get A Guitar」を歌っているK-POPアーティストは？",
+    "a": "RIIZE",
+    "c": [
+      "Girls' Generation",
+      "(G)I-DLE",
+      "MAMAMOO",
+      "RIIZE"
+    ]
+  },
+  {
+    "q": "RIIZE の代表曲として有名なのは？",
+    "a": "Get A Guitar",
+    "c": [
+      "Butterfly",
+      "LOVE DIVE",
+      "Get A Guitar",
+      "WANNABE"
+    ]
+  },
+  {
+    "q": "RIIZE のファン名として知られるのは？",
+    "a": "BRIIZE",
+    "c": [
+      "BRIIZE",
+      "CARAT",
+      "ONCE",
+      "MONSTIEZ"
+    ]
+  },
+  {
+    "q": "RIIZE は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "韓国",
+      "イギリス",
+      "アメリカ",
+      "日本"
+    ]
+  },
+  {
+    "q": "RIIZE はどんなグループとして知られる？",
+    "a": "ボーイズグループ",
+    "c": [
+      "7人組",
+      "ガールズグループ",
+      "ボーイズグループ",
+      "ソロ歌手"
+    ]
+  },
+  {
+    "q": "「In Bloom」を歌っているK-POPアーティストは？",
+    "a": "ZEROBASEONE",
+    "c": [
+      "ILLIT",
+      "ZEROBASEONE",
+      "GOT7",
+      "BIGBANG"
+    ]
+  },
+  {
+    "q": "ZEROBASEONE の代表曲として有名なのは？",
+    "a": "In Bloom",
+    "c": [
+      "Next Level",
+      "Blue Hour",
+      "In Bloom",
+      "TT"
+    ]
+  },
+  {
+    "q": "ZEROBASEONE のファン名として知られるのは？",
+    "a": "ZEROSE",
+    "c": [
+      "ONCE",
+      "ZEROSE",
+      "JAM",
+      "BRIIZE"
+    ]
+  },
+  {
+    "q": "ZEROBASEONE は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "イギリス",
+      "日本",
+      "韓国"
+    ]
+  },
+  {
+    "q": "ZEROBASEONE はどんなグループとして知られる？",
+    "a": "ボーイズグループ",
+    "c": [
+      "ロックバンド",
+      "ボーイズグループ",
+      "7人組",
+      "4人組"
+    ]
+  },
+  {
+    "q": "「One and Only」を歌っているK-POPアーティストは？",
+    "a": "BOYNEXTDOOR",
+    "c": [
+      "RIIZE",
+      "BOYNEXTDOOR",
+      "Kep1er",
+      "IVE"
+    ]
+  },
+  {
+    "q": "BOYNEXTDOOR の代表曲として有名なのは？",
+    "a": "One and Only",
+    "c": [
+      "Red Flavor",
+      "Make you happy",
+      "One and Only",
+      "FANTASTIC BABY"
+    ]
+  },
+  {
+    "q": "BOYNEXTDOOR のファン名として知られるのは？",
+    "a": "ONEDOOR",
+    "c": [
+      "MOA",
+      "Bunnies",
+      "FEARNOT",
+      "ONEDOOR"
+    ]
+  },
+  {
+    "q": "BOYNEXTDOOR は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "韓国",
+      "アメリカ",
+      "日本",
+      "イギリス"
+    ]
+  },
+  {
+    "q": "BOYNEXTDOOR はどんなグループとして知られる？",
+    "a": "ボーイズグループ",
+    "c": [
+      "9人組",
+      "俳優グループ",
+      "ボーイズグループ",
+      "8人組"
+    ]
+  },
+  {
+    "q": "「plot twist」を歌っているK-POPアーティストは？",
+    "a": "TWS",
+    "c": [
+      "IVE",
+      "ILLIT",
+      "EXO",
+      "TWS"
+    ]
+  },
+  {
+    "q": "TWS の代表曲として有名なのは？",
+    "a": "plot twist",
+    "c": [
+      "無限大",
+      "One and Only",
+      "plot twist",
+      "Next Level"
+    ]
+  },
+  {
+    "q": "TWS のファン名として知られるのは？",
+    "a": "42",
+    "c": [
+      "42",
+      "VIP",
+      "ReVeluv",
+      "ENGENE"
+    ]
+  },
+  {
+    "q": "TWS は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "アメリカ",
+      "韓国",
+      "日本",
+      "イギリス"
+    ]
+  },
+  {
+    "q": "TWS はどんなグループとして知られる？",
+    "a": "ボーイズグループ",
+    "c": [
+      "ボーイズグループ",
+      "4人組",
+      "ガールズグループ",
+      "俳優グループ"
+    ]
+  },
+  {
+    "q": "「Magnetic」を歌っているK-POPアーティストは？",
+    "a": "ILLIT",
+    "c": [
+      "TWICE",
+      "NewJeans",
+      "NMIXX",
+      "ILLIT"
+    ]
+  },
+  {
+    "q": "ILLIT の代表曲として有名なのは？",
+    "a": "Magnetic",
+    "c": [
+      "Magnetic",
+      "JIKJIN",
+      "Get A Guitar",
+      "plot twist"
+    ]
+  },
+  {
+    "q": "ILLIT のファン名として知られるのは？",
+    "a": "GLLIT",
+    "c": [
+      "GLLIT",
+      "EXO-L",
+      "ATINY",
+      "STAY"
+    ]
+  },
+  {
+    "q": "ILLIT は主にどこの音楽シーンで活動するグループ？",
+    "a": "韓国",
+    "c": [
+      "韓国",
+      "イギリス",
+      "アメリカ",
+      "日本"
+    ]
+  },
+  {
+    "q": "ILLIT はどんなグループとして知られる？",
+    "a": "ガールズグループ",
+    "c": [
+      "5人組",
+      "俳優グループ",
+      "8人組",
+      "ガールズグループ"
+    ]
+  },
+  {
+    "q": "「Make you happy」を歌っているK-POPアーティストは？",
+    "a": "NiziU",
+    "c": [
+      "NiziU",
+      "Stray Kids",
+      "NMIXX",
+      "RIIZE"
+    ]
+  },
+  {
+    "q": "NiziU の代表曲として有名なのは？",
+    "a": "Make you happy",
+    "c": [
+      "Dolphin",
+      "plot twist",
+      "Make you happy",
+      "ANTIFRAGILE"
+    ]
+  },
+  {
+    "q": "NiziU のファン名として知られるのは？",
+    "a": "WithU",
+    "c": [
+      "NCTzen",
+      "FEARNOT",
+      "WithU",
+      "ARMY"
+    ]
+  },
+  {
+    "q": "NiziU は主にどこの音楽シーンで活動するグループ？",
+    "a": "日本",
+    "c": [
+      "イギリス",
+      "日本",
+      "韓国",
+      "アメリカ"
+    ]
+  },
+  {
+    "q": "NiziU はどんなグループとして知られる？",
+    "a": "ガールズグループ",
+    "c": [
+      "俳優グループ",
+      "7人組",
+      "13人組",
+      "ガールズグループ"
+    ]
+  },
+  {
+    "q": "「無限大」を歌っているK-POPアーティストは？",
+    "a": "JO1",
+    "c": [
+      "GOT7",
+      "(G)I-DLE",
+      "JO1",
+      "NewJeans"
+    ]
+  },
+  {
+    "q": "JO1 の代表曲として有名なのは？",
+    "a": "無限大",
+    "c": [
+      "Make you happy",
+      "Drunk-Dazed",
+      "Just Right",
+      "無限大"
+    ]
+  },
+  {
+    "q": "JO1 のファン名として知られるのは？",
+    "a": "JAM",
+    "c": [
+      "DIVE",
+      "WithU",
+      "PANDA",
+      "JAM"
+    ]
+  },
+  {
+    "q": "JO1 は主にどこの音楽シーンで活動するグループ？",
+    "a": "日本",
+    "c": [
+      "アメリカ",
+      "日本",
+      "イギリス",
+      "韓国"
+    ]
+  },
+  {
+    "q": "JO1 はどんなグループとして知られる？",
+    "a": "ボーイズグループ",
+    "c": [
+      "ボーイズグループ",
+      "4人組",
+      "ロックバンド",
+      "俳優グループ"
+    ]
+  }
+];
+
+let questions = [];
+let current = 0;
+let score = 0;
+let answered = false;
+
+function shuffle(array){
+for(let i=array.length-1;i>0;i--){
+const j=Math.floor(Math.random()*(i+1));
+[array[i],array[j]]=[array[j],array[i]];
+}
+return array;
+}
+
+function startQuiz(){
+const map = new Map();
+quizData.forEach(q => {
+if(!map.has(q.q)) map.set(q.q,q);
+});
+
+const uniqueQuizData = Array.from(map.values());
+
+if(uniqueQuizData.length < 50){
+alert("問題数が50問未満です。quizDataを増やしてください。");
+return;
+}
+
+questions = shuffle([...uniqueQuizData]).slice(0,50);
+current=0;
+score=0;
+answered=false;
+
+document.getElementById("startScreen").classList.add("hidden");
+document.getElementById("resultScreen").classList.add("hidden");
+document.getElementById("quizScreen").classList.remove("hidden");
+
+showQuestion();
+}
+
+function showQuestion(){
+answered=false;
+const q = questions[current];
+
+document.getElementById("progress").textContent =
+`問題 ${current+1} / ${questions.length}　正解数：${score}`;
+
+document.getElementById("question").textContent = q.q;
+document.getElementById("status").textContent = "";
+
+const choices = document.getElementById("choices");
+choices.innerHTML = "";
+
+shuffle([...q.c]).forEach(choice => {
+const btn = document.createElement("button");
+btn.className = "choice-btn";
+btn.textContent = choice;
+btn.onclick = () => answer(btn, choice, q.a);
+choices.appendChild(btn);
+});
+}
+
+function answer(button, selected, correct){
+if(answered) return;
+answered=true;
+
+const buttons=document.querySelectorAll(".choice-btn");
+
+buttons.forEach(btn=>{
+btn.disabled=true;
+if(btn.textContent===correct){
+btn.classList.add("correct");
+}
+});
+
+if(selected===correct){
+score++;
+button.classList.add("correct");
+document.getElementById("status").textContent="正解！";
+} else {
+button.classList.add("wrong");
+document.getElementById("status").textContent=`不正解！ 正解は「${correct}」`;
+}
+
+setTimeout(()=>{
+current++;
+if(current<questions.length){
+showQuestion();
+} else {
+showResult();
+}
+},1000);
+}
+
+function showResult(){
+document.getElementById("quizScreen").classList.add("hidden");
+document.getElementById("resultScreen").classList.remove("hidden");
+document.getElementById("resultText").textContent =
+`50問中 ${score}問正解！`;
+}
+</script>
+
+</body>
+</html>
